@@ -473,6 +473,8 @@ install_ufw(){
 	ufw allow 8530/tcp
 	ufw allow 2812/tcp
 	ufw allow 22507/tcp
+	ufw allow 444/tcp
+	ufw allow 8000/tcp
 	ufw allow 67
 	ufw allow 68
 	ufw allow 5353
