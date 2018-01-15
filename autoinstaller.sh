@@ -401,8 +401,8 @@ echo "3" > /proc/sys/net/ipv4/tcp_fastopen
 echo "net.ipv4.tcp_fastopen=3" > /etc/sysctl.d/30-tcp_fastopen.conf
 echo '* soft nofile 51200' >> /etc/security/limits.conf
 echo '* hard nofile 51200' >> /etc/security/limits.conf
-echo '* hard nproc 2' >> /etc/security/limits.conf
-echo '* hard maxlogins 2' >> /etc/security/limits.conf
+#echo '* hard nproc 2' >> /etc/security/limits.conf
+#echo '* hard maxlogins 2' >> /etc/security/limits.conf
 #echo 'net.ipv4.ip_forward = 1' >>/etc/sysctl.conf
 #echo 'net.ipv4.conf.default.rp_filter = 1' >>/etc/sysctl.conf
 #echo 'net.ipv4.conf.default.accept_source_route = 0' >>/etc/sysctl.conf
@@ -482,24 +482,6 @@ install_ufw(){
 	ufw allow 7300/udp
 	ufw disable
 	ufw enable
-iptables -N SSHATTACK
-iptables -A SSHATTACK -j LOG --log-prefix "Possible SSH attack! " --log-level 7
-iptables -A INPUT -i eth0 -p tcp -m state --dport 22 --state NEW -m recent --set
-iptables -A INPUT -i eth0 -p tcp -m state --dport 80 --state NEW -m recent --set
-iptables -A INPUT -i eth0 -p tcp -m state --dport 143 --state NEW -m recent --set
-iptables -A INPUT -i eth0 -p tcp -m state --dport 443 --state NEW -m recent --set
-iptables -A INPUT -i eth0 -p tcp -m state --dport 22507 --state NEW -m recent --set
-iptables -A INPUT -i eth0 -p tcp -m state --dport 22 --state NEW -m recent --update --seconds 120 --hitcount 4 -j SSHATTACK
-iptables -A INPUT -i eth0 -p tcp -m state --dport 80 --state NEW -m recent --update --seconds 120 --hitcount 4 -j SSHATTACK
-iptables -A INPUT -i eth0 -p tcp -m state --dport 143 --state NEW -m recent --update --seconds 120 --hitcount 4 -j SSHATTACK
-iptables -A INPUT -i eth0 -p tcp -m state --dport 443 --state NEW -m recent --update --seconds 120 --hitcount 4 -j SSHATTACK
-iptables -A INPUT -i eth0 -p tcp -m state --dport 22507 --state NEW -m recent --update --seconds 120 --hitcount 4 -j SSHATTACK
-iptables -t filter -I INPUT -p tcp --syn --dport 22 -m connlimit --connlimit-above 2 --connlimit-mask 32 -j SSHATTACK
-iptables -t filter -I INPUT -p tcp --syn --dport 80 -m connlimit --connlimit-above 2 --connlimit-mask 32 -j SSHATTACK
-iptables -t filter -I INPUT -p tcp --syn --dport 143 -m connlimit --connlimit-above 2 --connlimit-mask 32 -j SSHATTACK
-iptables -t filter -I INPUT -p tcp --syn --dport 443 -m connlimit --connlimit-above 2 --connlimit-mask 32 -j SSHATTACK
-iptables -t filter -I INPUT -p tcp --syn --dport 22507 -m connlimit --connlimit-above 2 --connlimit-mask 32 -j SSHATTACK
-iptables -A SSHATTACK -j REJECT
 iptables -N BLOCKACCESS
 iptables -I INPUT -p tcp --dport 22 -m string --algo bm --string 'User-Agent: Bittorrent' -j BLOCKACCESS
 iptables -I INPUT -p tcp --dport 22 -m string --algo bm --string 'User-Agent: BitTorrent protocol' -j BLOCKACCESS
